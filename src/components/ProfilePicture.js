@@ -7,25 +7,27 @@ const ProfilePicture = (props) => {
   // Threejs scene setup
   const scene = new THREE.Scene()
   const camera = new THREE.PerspectiveCamera(75, 400 / 400, 0.1, 1000)
-  const renderer = new THREE.WebGLRenderer({ alpha: true })
+  const renderer = new THREE.WebGLRenderer({
+    alpha: true,
+    antialias: true
+  })
   renderer.setSize(400, 400)
 
   // Create objects
-  const geometry = new THREE.CylinderGeometry(1, 1, 3)
-  const material = new THREE.MeshBasicMaterial({ color: 0x0000ff })
+  const geometry = new THREE.CylinderGeometry(1.25, 1.25, 3, 100)
+  const texture = new THREE.TextureLoader().load('https://s.gravatar.com/avatar/558cb4dd16019bf6123d241ad5d6ee56?s=512')
+  texture.wrapS = THREE.RepeatWrapping
+  texture.wrapT = THREE.RepeatWrapping
+  texture.repeat.set(3, 1)
+  const material = new THREE.MeshBasicMaterial({ map: texture })
   const cube = new THREE.Mesh(geometry, material)
   scene.add(cube)
-  const edges = new THREE.EdgesGeometry(geometry)
-  const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xffffff, linewidth: 2 }))
-  scene.add(line)
   camera.position.z = 5
+  cube.rotation.z += 0.05
 
   const animate = () => {
     requestAnimationFrame(animate)
-    cube.rotation.x += 0.001
-    cube.rotation.y += 0.001
-    line.rotation.x += 0.001
-    line.rotation.y += 0.001
+    cube.rotation.y += 0.005
     renderer.render(scene, camera)
   }
 
